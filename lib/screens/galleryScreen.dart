@@ -1,10 +1,10 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:math';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -27,11 +27,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
       setState(
         () {
           _lista = data;
+          _isLoading = false;
         },
       );
-      _isLoading = false;
     } else {
-      _isLoading = false;
+      setState(() {
+        _isLoading = false;
+      });
       throw Exception('Failed to load data');
     }
   }
@@ -44,69 +46,83 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String title;
-    String thumbnailUrl;
-
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white24,
-        floatingActionButton: FloatingActionButton(
-          // isExtended: true,
-          child: Icon(Icons.add),
-          backgroundColor: Colors.green,
-          onPressed: () {
-            setState(() {
-              List<dynamic> test = [
-                {
-                  "id": "42",
-                  "createdAt": "2021-02-26T09:22:48.418Z",
-                  "title": "transition",
-                  "image":
-                      "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
-                  "description": "China"
-                }
-              ];
-              _lista.addAll(test);
-            });
-          },
-        ),
-        appBar: AppBar(
-          title: Text("Dynamic masonry grid"),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-        body: Container(
-          margin: EdgeInsets.all(12),
-          child: !_isLoading
-              ? StaggeredGridView.countBuilder(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 12,
-                  itemCount: _lista?.length,
-                  itemBuilder: (context, index) => Container(
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: _lista[index]["image"],
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  staggeredTileBuilder: (index) {
-                    return StaggeredTile.count(1, index.isEven ? 1.2 : 1.5);
-                    //return StaggeredTile.fit(1);
-                  },
-                )
-              : null,
-        ),
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text('random dynamic tile sizes'),
       ),
+      floatingActionButton: FloatingActionButton(
+        // isExtended: true,
+        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+        onPressed: () {
+          setState(() {
+            List<dynamic> test = [
+              {
+                "id": "42",
+                "createdAt": "2021-02-26T09:22:48.418Z",
+                "title": "transition",
+                "image":
+                    "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
+                "description": "China"
+              }
+            ];
+            _lista.addAll(test);
+          });
+        },
+      ),
+      body: !_isLoading
+          ? StaggeredGridView.countBuilder(
+              itemCount: _lista.length,
+              primary: false,
+              crossAxisCount: 4,
+              mainAxisSpacing: 4.0,
+              crossAxisSpacing: 4.0,
+              itemBuilder: (context, index) => new Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25.0),
+                  child: new Column(
+                    children: <Widget>[
+                      new Stack(
+                        children: <Widget>[
+                          //new Center(child: new CircularProgressIndicator()),
+                          new Center(
+                            child: new FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: _lista[index]["image"],
+                            ),
+                          ),
+                        ],
+                      ),
+                      new Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: new Column(
+                          children: <Widget>[
+                            new Text(
+                              'Image number $index',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            new Text(
+                              'Width: ',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                            new Text(
+                              'Height: ',
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              staggeredTileBuilder: (index) => new StaggeredTile.fit(2),
+            )
+          : null,
     );
   }
 }
