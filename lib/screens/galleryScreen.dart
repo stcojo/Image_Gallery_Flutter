@@ -50,6 +50,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       appBar: new AppBar(
         title: new Text('random dynamic tile sizes'),
       ),
+      backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
         // isExtended: true,
         child: Icon(Icons.add),
@@ -61,7 +62,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 "id": "42",
                 "createdAt": "2021-02-26T09:22:48.418Z",
                 "title": "transition",
-                "image":
+                "url":
                     "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
                 "description": "China"
               }
@@ -83,40 +84,39 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25.0),
-                  child: new Column(
-                    children: <Widget>[
-                      new Stack(
-                        children: <Widget>[
-                          //new Center(child: new CircularProgressIndicator()),
-                          new Center(
-                            child: new FadeInImage.memoryNetwork(
-                              placeholder: kTransparentImage,
-                              image: _lista[index]["image"],
-                            ),
+                  child: Container(
+                    color: Colors.grey[850],
+                    child: new Column(
+                      children: <Widget>[
+                        Center(
+                          child: new FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: _lista[index]["url"],
                           ),
-                        ],
-                      ),
-                      new Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: new Column(
-                          children: <Widget>[
-                            new Text(
-                              'Image number $index',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            new Text(
-                              'Width: ',
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                            new Text(
-                              'Height: ',
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ],
                         ),
-                      )
-                    ],
+                        new Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: new Column(
+                            children: <Widget>[
+                              new Text(
+                                'Image number $index',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              new Text(
+                                'Width: ',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                              new Text(
+                                'Height: ',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
