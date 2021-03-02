@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:grow_it/model/post.dart';
 import 'package:grow_it/screens/detailScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class GalleryScreen extends StatefulWidget {
 
 class _GalleryScreenState extends State<GalleryScreen> {
   List<dynamic> _lista;
+  List<Post> convertedList;
   bool _isLoading = true;
 
   Future<dynamic> fetchData() async {
@@ -28,6 +30,12 @@ class _GalleryScreenState extends State<GalleryScreen> {
       setState(
         () {
           _lista = data;
+
+          final List t = json.decode(response.body);
+          final List<Post> posts =
+              t.map((item) => Post.fromJson(item)).toList();
+
+          print(posts[0].description);
           _isLoading = false;
         },
       );
@@ -47,8 +55,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   _openDetail(context, index) {
     final route = MaterialPageRoute(
-      builder: (context) => DetailPage(url: _lista[index]["url"]),
-    );
+        //builder: (context) => DetailPage(images: _lista[index]["url"]),
+        builder: (context) => DetailPage(images: _lista));
     Navigator.push(context, route);
   }
 
