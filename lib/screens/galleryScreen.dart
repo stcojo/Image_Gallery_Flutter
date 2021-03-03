@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
-import 'dart:typed_data';
+import 'package:drag_down_to_pop/drag_down_to_pop.dart';
 import 'package:grow_it/model/post.dart';
 import 'package:grow_it/screens/detailScreen.dart';
 import 'package:http/http.dart' as http;
@@ -53,10 +52,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
     fetchData();
   }
 
+  /* _openDetail(context, index) {
+    final route = ImageViewerPageRoute(builder: (context) => DetailPage(posts: posts, index: index));
+    Navigator.push(context, route);
+  } */
+
   _openDetail(context, index) {
-    final route = MaterialPageRoute(
-        //builder: (context) => DetailPage(images: _lista[index]["url"]),
-        builder: (context) => DetailPage(posts: posts, index: index));
+    final route = ImageViewerPageRoute(
+        builder: (context) => DetailScreen(posts: posts, index: index));
     Navigator.push(context, route);
   }
 
@@ -146,5 +149,27 @@ class _GalleryScreenState extends State<GalleryScreen> {
             )
           : null,
     );
+  }
+}
+
+class ImageViewerPageRoute extends MaterialPageRoute {
+  ImageViewerPageRoute({@required WidgetBuilder builder})
+      : super(builder: builder, maintainState: false);
+
+  @override
+  Widget buildTransitions(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation, Widget child) {
+    return const DragDownToPopPageTransitionsBuilder()
+        .buildTransitions(this, context, animation, secondaryAnimation, child);
+  }
+
+  @override
+  bool canTransitionFrom(TransitionRoute previousRoute) {
+    return false;
+  }
+
+  @override
+  bool canTransitionTo(TransitionRoute nextRoute) {
+    return false;
   }
 }
