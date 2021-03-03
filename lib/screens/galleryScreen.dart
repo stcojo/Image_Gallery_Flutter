@@ -18,6 +18,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<dynamic> _lista;
   List<Post> convertedList;
   bool _isLoading = true;
+  List<Post> posts;
 
   Future<dynamic> fetchData() async {
     var url = env['URL'];
@@ -25,17 +26,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
     final response = await http.get('$url');
 
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
+      var data = json.decode(response.body);
 
       setState(
         () {
           _lista = data;
 
           final List t = json.decode(response.body);
-          final List<Post> posts =
-              t.map((item) => Post.fromJson(item)).toList();
+          posts = t.map((item) => Post.fromJson(item)).toList();
 
-          print(posts[0].description);
+          print(posts);
           _isLoading = false;
         },
       );
@@ -56,7 +56,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   _openDetail(context, index) {
     final route = MaterialPageRoute(
         //builder: (context) => DetailPage(images: _lista[index]["url"]),
-        builder: (context) => DetailPage(images: _lista));
+        builder: (context) => DetailPage(posts: posts, index: index));
     Navigator.push(context, route);
   }
 
