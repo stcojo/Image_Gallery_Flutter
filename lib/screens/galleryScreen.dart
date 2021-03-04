@@ -18,7 +18,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<Post> convertedList;
   bool _isLoading = true;
   List<Post> posts;
-
   Future<dynamic> fetchData() async {
     var url = env['URL'];
 
@@ -65,6 +64,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('random dynamic tile sizes'),
@@ -94,7 +95,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ? StaggeredGridView.countBuilder(
               itemCount: _lista.length,
               primary: false,
-              crossAxisCount: 4,
+              crossAxisCount: width > 1000
+                  ? 4
+                  : width > 800
+                      ? 3
+                      : 2,
               mainAxisSpacing: 4.0,
               crossAxisSpacing: 4.0,
               itemBuilder: (context, index) => new Card(
@@ -109,7 +114,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                       children: <Widget>[
                         GestureDetector(
                           child: Hero(
-                            tag: _lista[index]["url"],
+                            tag: posts[index].url,
                             child: Center(
                               child: new FadeInImage.memoryNetwork(
                                 placeholder: kTransparentImage,
@@ -145,7 +150,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   ),
                 ),
               ),
-              staggeredTileBuilder: (index) => new StaggeredTile.fit(2),
+              staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
             )
           : null,
     );
