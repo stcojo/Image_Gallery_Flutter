@@ -5,7 +5,6 @@ import 'package:grow_it/screens/detailScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -92,65 +91,30 @@ class _GalleryScreenState extends State<GalleryScreen> {
         },
       ),
       body: !_isLoading
-          ? StaggeredGridView.countBuilder(
-              itemCount: _lista.length,
-              primary: false,
-              crossAxisCount: width > 1000
-                  ? 4
-                  : width > 800
-                      ? 3
-                      : 2,
-              mainAxisSpacing: 4.0,
-              crossAxisSpacing: 4.0,
-              itemBuilder: (context, index) => new Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(26.0),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(26.0),
-                  child: Container(
-                    color: Colors.grey[850],
-                    child: new Column(
-                      children: <Widget>[
-                        GestureDetector(
-                          child: Hero(
-                            tag: posts[index].url,
-                            child: Center(
-                              child: new FadeInImage.memoryNetwork(
-                                placeholder: kTransparentImage,
-                                image: _lista[index]["url"],
-                              ),
-                            ),
-                          ),
-                          onTap: () => _openDetail(context, index),
-                        ),
-                        new Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: new Column(
-                            children: <Widget>[
-                              new Text(
-                                'Image number $index',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              new Text(
-                                'Width: ',
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                              new Text(
-                                'Height: ',
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+          ? Center(
+              child: Container(
+                child: GridView.builder(
+                  itemCount: posts.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 5.0,
+                    mainAxisSpacing: 5.0,
                   ),
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () => _openDetail(context, index),
+                      child: Hero(
+                        tag: posts[index].url,
+                        child: FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: posts[index].url,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
-              staggeredTileBuilder: (index) => new StaggeredTile.fit(1),
             )
           : null,
     );

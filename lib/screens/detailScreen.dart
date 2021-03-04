@@ -22,7 +22,7 @@ class DetailScreen extends StatelessWidget {
             imageProvider: NetworkImage(posts[index].url),
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 0.8,
-            maxScale: PhotoViewComputedScale.covered * 1.1,
+            maxScale: PhotoViewComputedScale.covered * 1.8,
             heroAttributes: PhotoViewHeroAttributes(tag: posts[index].url),
           );
         },
