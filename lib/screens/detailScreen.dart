@@ -20,25 +20,13 @@ class DetailScreen extends StatelessWidget {
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
             imageProvider: NetworkImage(posts[index].url),
-            initialScale: PhotoViewComputedScale.contained * 1.0,
+            initialScale: PhotoViewComputedScale.contained * 0.99, //cat bug
             minScale: PhotoViewComputedScale.contained * 0.8,
             maxScale: PhotoViewComputedScale.covered * 1.8,
             heroAttributes: PhotoViewHeroAttributes(tag: posts[index].url),
           );
         },
         itemCount: posts.length,
-        /* loadingBuilder: (context, progress) => Center(
-           child: Container(
-             width: 20.0,
-             height: 20.0,
-             child: CircularProgressIndicator(
-               value: _progress == null
-                   ? null
-                   : _progress.cumulativeBytesLoaded /
-                       _progress.expectedTotalBytes,
-             ),
-           ),
-         ) */
         backgroundDecoration: null,
         pageController: _pageController,
         onPageChanged: null, //

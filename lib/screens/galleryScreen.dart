@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:drag_down_to_pop/drag_down_to_pop.dart';
+import 'package:grow_it/components/tile.dart';
 import 'package:grow_it/model/post.dart';
 import 'package:grow_it/screens/detailScreen.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class GalleryScreen extends StatefulWidget {
   @override
@@ -16,7 +16,9 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<dynamic> _lista;
   List<Post> convertedList;
   bool _isLoading = true;
+  ScrollController _scrollController;
   List<Post> posts;
+
   Future<dynamic> fetchData() async {
     var url = env['URL'];
 
@@ -47,13 +49,19 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   void initState() {
     super.initState();
+
+    _scrollController = new ScrollController(initialScrollOffset: 5.0)
+      ..addListener(() => _scrollListener());
     fetchData();
   }
 
-  /* _openDetail(context, index) {
-    final route = ImageViewerPageRoute(builder: (context) => DetailPage(posts: posts, index: index));
-    Navigator.push(context, route);
-  } */
+  void _scrollListener() {
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent - 250 &&
+        !_scrollController.position.outOfRange) {
+      print("reached bottom, should load more");
+    }
+  }
 
   _openDetail(context, index) {
     final route = ImageViewerPageRoute(
@@ -63,8 +71,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('random dynamic tile sizes'),
@@ -76,17 +82,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         backgroundColor: Colors.green,
         onPressed: () {
           setState(() {
-            List<dynamic> test = [
-              {
-                "id": "42",
-                "createdAt": "2021-02-26T09:22:48.418Z",
-                "title": "transition",
-                "url":
-                    "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
-                "description": "China"
-              }
-            ];
-            _lista.addAll(test);
+            posts.add(
+              new Post(
+                  "42",
+                  "2021-02-26T09:22:48.418Z",
+                  "transition",
+                  "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
+                  "test"),
+            );
           });
         },
       ),
@@ -95,22 +98,17 @@ class _GalleryScreenState extends State<GalleryScreen> {
               child: Container(
                 child: GridView.builder(
                   itemCount: posts.length,
+                  controller: _scrollController,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
                   itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () => _openDetail(context, index),
-                      child: Hero(
-                        tag: posts[index].url,
-                        child: FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: posts[index].url,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    return Tile(
+                      index: index,
+                      url: posts[index].url,
+                      callback: () => _openDetail(context, index),
                     );
                   },
                 ),
