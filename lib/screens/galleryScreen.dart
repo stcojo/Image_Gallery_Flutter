@@ -17,13 +17,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<Post> convertedList;
   bool _isLoading = true;
   ScrollController _scrollController;
-  List<Post> posts;
+  List<Post> posts = [];
 
   Future<dynamic> fetchData() async {
     var url = env['URL'];
 
     final response = await http.get('$url');
-
+    print("Fetching data...");
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
 
@@ -32,9 +32,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
           _lista = data;
 
           final List t = json.decode(response.body);
-          posts = t.map((item) => Post.fromJson(item)).toList();
+          posts.addAll(t.map((item) => Post.fromJson(item)).toList());
 
-          print(posts);
           _isLoading = false;
         },
       );
@@ -59,7 +58,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent - 250 &&
         !_scrollController.position.outOfRange) {
-      print("reached bottom, should load more");
+      if (!_isLoading) {
+        fetchData();
+      }
+      //print("reached bottom, should load more");
     }
   }
 
@@ -81,7 +83,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
         child: Icon(Icons.add),
         backgroundColor: Colors.green,
         onPressed: () {
-          setState(() {
+          fetchData();
+          /* setState(() {
             posts.add(
               new Post(
                   "42",
@@ -90,7 +93,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
                   "test"),
             );
-          });
+          }); */
         },
       ),
       body: !_isLoading
