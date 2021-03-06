@@ -19,11 +19,12 @@ class DetailScreen extends StatelessWidget {
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(posts[index].url),
+            imageProvider: NetworkImage(posts[index].largeImageURL),
             initialScale: PhotoViewComputedScale.contained * 0.99, //cat bug
             minScale: PhotoViewComputedScale.contained * 0.8,
             maxScale: PhotoViewComputedScale.covered * 1.8,
-            heroAttributes: PhotoViewHeroAttributes(tag: posts[index].url),
+            heroAttributes:
+                PhotoViewHeroAttributes(tag: posts[index].webformatURL),
           );
         },
         itemCount: posts.length,

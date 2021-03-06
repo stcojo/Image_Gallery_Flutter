@@ -1,11 +1,11 @@
-import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:drag_down_to_pop/drag_down_to_pop.dart';
 import 'package:grow_it/components/tile.dart';
 import 'package:grow_it/model/post.dart';
 import 'package:grow_it/screens/detailScreen.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class GalleryScreen extends StatefulWidget {
   @override
@@ -18,30 +18,29 @@ class _GalleryScreenState extends State<GalleryScreen> {
   bool _isLoading = true;
   ScrollController _scrollController;
   List<Post> posts = [];
-
+  int page = 1;
   Future<dynamic> fetchData() async {
-    var url = env['URL'];
+    var url = env['PIXABAYURL'];
 
-    final response = await http.get('$url');
-    print("Fetching data...");
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body);
-
-      setState(
-        () {
-          _lista = data;
-
-          final List t = json.decode(response.body);
-          posts.addAll(t.map((item) => Post.fromJson(item)).toList());
-
-          _isLoading = false;
-        },
-      );
-    } else {
+    try {
+      print("Fetching data on page $page...");
+      final response = await Dio().get('$url&page=$page');
+      if (response.statusCode == 200) {
+        setState(
+          () {
+            page++;
+            final List t =
+                response.data["hits"]; //dio does json decode automatically
+            posts.addAll(t.map((item) => Post.fromJson(item)).toList());
+            _isLoading = false;
+          },
+        );
+      }
+    } catch (e) {
+      print(e);
       setState(() {
         _isLoading = false;
       });
-      throw Exception('Failed to load data');
     }
   }
 
@@ -83,17 +82,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
         child: Icon(Icons.add),
         backgroundColor: Colors.green,
         onPressed: () {
-          fetchData();
-          /* setState(() {
+          setState(() {
             posts.add(
               new Post(
-                  "42",
-                  "2021-02-26T09:22:48.418Z",
-                  "transition",
+                  42,
                   "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
-                  "test"),
+                  "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
+                  100),
             );
-          }); */
+          });
         },
       ),
       body: !_isLoading
@@ -103,14 +100,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   itemCount: posts.length,
                   controller: _scrollController,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                    crossAxisCount: kIsWeb ? 3 : 2,
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
                   itemBuilder: (BuildContext context, int index) {
                     return Tile(
                       index: index,
-                      url: posts[index].url,
+                      url: posts[index].largeImageURL,
                       callback: () => _openDetail(context, index),
                     );
                   },

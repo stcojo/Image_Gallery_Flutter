@@ -1,11 +1,10 @@
 class Post {
-  String id;
-  String createdAt;
-  String title;
-  String url;
-  String description;
+  int id;
+  String webformatURL;
+  String largeImageURL;
+  int views;
 
-  Post(this.id, this.createdAt, this.title, this.url, this.description);
+  Post(this.id, this.webformatURL, this.largeImageURL, this.views);
 
   /* Post.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -16,21 +15,16 @@ class Post {
   } */
 
   factory Post.fromJson(dynamic json) {
-    return Post(
-        json['id'] as String,
-        json['createdAt'] as String,
-        json['title'] as String,
-        json['url'] as String,
-        json['description'] as String);
+    return Post(json['id'] as int, json['webformatURL'] as String,
+        json['largeImageURL'] as String, json['views'] as int);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['createdAt'] = this.createdAt;
-    data['title'] = this.title;
-    data['url'] = this.url;
-    data['description'] = this.description;
+    data['webformatURL'] = this.webformatURL;
+    data['largeImageURL'] = this.largeImageURL;
+    data['views'] = this.views;
     return data;
   }
 }
