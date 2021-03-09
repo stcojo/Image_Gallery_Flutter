@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GalleryScreen extends StatefulWidget {
   @override
@@ -20,6 +21,23 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<Post> posts = [];
   int page = 1;
   String search = "plant";
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  List<String> history;
+
+  Future<List<String>> getHistory() async {
+    final SharedPreferences prefs = await _prefs;
+    List<String> elements =
+        prefs.getStringList('history') ?? List.from(["test"]);
+    return elements;
+  }
+
+  void setHistory() async {
+    final SharedPreferences prefs = await _prefs;
+    setState(() {
+      prefs.setStringList("history", history);
+    });
+  }
 
   Future<dynamic> fetchData() async {
     var url = env['PIXABAYURL'];
@@ -46,7 +64,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 4,
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.orange,
             textColor: Colors.white,
             fontSize: 16.0);
       }
@@ -93,6 +111,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         MediaQuery.of(context).orientation == Orientation.portrait;
     final controller = FloatingSearchBarController();
 
+    getHistory().then(
+      (value) => setState(
+        () {
+          history = value;
+        },
+      ),
+    );
+
     return FloatingSearchBar(
       hint: 'Caută imagini...',
 
@@ -116,8 +142,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
         controller.close();
         setState(() {
           page = 1;
+          history.insert(0, query);
           posts.clear();
         });
+        setHistory();
         fetchData();
       },
       // Specify a custom transition to be used for
@@ -127,8 +155,35 @@ class _GalleryScreenState extends State<GalleryScreen> {
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(Icons.place),
-            onPressed: () {},
+            icon: const Icon(Icons.delete_forever),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("Atenție"),
+                    content: Text("Ștergi istoricul căutărilor?"),
+                    actions: [
+                      TextButton(
+                        child: Text("Da"),
+                        onPressed: () {
+                          setState(() {
+                            history.clear();
+                            setHistory();
+                          });
+                        },
+                      ),
+                      TextButton(
+                        child: Text("Nu"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ),
         FloatingSearchBarAction.searchToClear(
@@ -136,14 +191,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
         ),
       ],
       builder: (context, transition) {
-        final List<String> entries = <String>[
-          "Flutter",
-          "Dart",
-          "React Native",
-          "Android",
-          "iOS",
-        ];
-
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Material(
@@ -153,7 +200,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
               padding: const EdgeInsets.only(top: 8, bottom: 0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: entries.asMap().entries.map((entry) {
+                children: history.asMap().entries.map((entry) {
                   int index = entry.key;
 
                   var w = GestureDetector(
@@ -197,6 +244,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return new Scaffold(
       backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
@@ -204,15 +253,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         child: Icon(Icons.add),
         backgroundColor: Colors.green,
         onPressed: () {
-          setState(() {
-            posts.add(
-              new Post(
-                  42,
-                  "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
-                  "https://cdn.pixabay.com/photo/2016/04/04/15/30/girl-1307429_960_720.jpg",
-                  100),
-            );
-          });
+          setHistory();
         },
       ),
       body: Stack(
@@ -224,9 +265,27 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 itemCount: posts.length,
                 controller: _scrollController,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: kIsWeb ? 3 : 2,
-                  crossAxisSpacing: 5.0,
-                  mainAxisSpacing: 5.0,
+                  crossAxisCount: kIsWeb
+                      ? (width > 1000
+                          ? 4
+                          : width > 600
+                              ? 3
+                              : 2)
+                      : 2,
+                  crossAxisSpacing: (kIsWeb
+                      ? (width > 1000
+                          ? 150
+                          : width > 600
+                              ? 100
+                              : 10)
+                      : 5.0),
+                  mainAxisSpacing: (kIsWeb
+                      ? (width > 1000
+                          ? 150
+                          : width > 600
+                              ? 100
+                              : 10)
+                      : 5.0),
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   return Tile(
