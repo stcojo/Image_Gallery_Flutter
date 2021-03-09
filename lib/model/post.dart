@@ -6,14 +6,6 @@ class Post {
 
   Post(this.id, this.webformatURL, this.largeImageURL, this.views);
 
-  /* Post.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    createdAt = json['createdAt'];
-    title = json['title'];
-    url = json['url'];
-    description = json['description'];
-  } */
-
   factory Post.fromJson(dynamic json) {
     return Post(json['id'] as int, json['webformatURL'] as String,
         json['largeImageURL'] as String, json['views'] as int);
