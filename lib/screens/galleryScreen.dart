@@ -23,7 +23,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   String search = "plant";
 
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  List<String> history;
+  List<String> history = List<String>.filled(3, "");
 
   Future<List<String>> getHistory() async {
     final SharedPreferences prefs = await _prefs;
@@ -124,7 +124,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
       controller: controller,
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
-      transitionDuration: const Duration(milliseconds: 800),
+      transitionDuration: const Duration(milliseconds: 600),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
       axisAlignment: isPortrait ? 0.0 : -1.0,
@@ -142,7 +142,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         controller.close();
         setState(() {
           page = 1;
-          history.insert(0, query);
+          if (!history.contains(query)) history.insert(0, query);
           posts.clear();
         });
         setHistory();
@@ -171,6 +171,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                             history.clear();
                             setHistory();
                           });
+                          Navigator.of(context).pop();
                         },
                       ),
                       TextButton(
@@ -206,6 +207,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   var w = GestureDetector(
                     onTap: () {
                       print("Tapped index $index");
+                      controller.close();
+                      controller.query = entry.value;
+                      setState(() {
+                        search = entry.value;
+                        page = 1;
+                        posts.clear();
+                      });
+                      fetchData();
                     },
                     child: Column(
                       children: [
