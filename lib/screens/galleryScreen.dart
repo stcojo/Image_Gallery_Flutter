@@ -20,6 +20,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   bool _isLoading = true;
   bool _isLastPage = false;
   ScrollController _scrollController;
+
   List<Post> posts = [];
   int page = 1;
   String search = "plant";
@@ -280,7 +281,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       floatingActionButton: FloatingActionButton(
         // isExtended: true,
         child: Icon(Icons.repeat),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.orange,
         onPressed: () {
           setState(() {
             search = getRandomWord();

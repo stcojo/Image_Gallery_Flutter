@@ -43,3 +43,4 @@ app.*.map.json
 firebase.json
 .firebaserc
 *.cache
+growit.zip
