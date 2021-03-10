@@ -18,11 +18,12 @@ class GalleryScreen extends StatefulWidget {
 
 class _GalleryScreenState extends State<GalleryScreen> {
   bool _isLoading = true;
+  bool _isLastPage = false;
   ScrollController _scrollController;
   List<Post> posts = [];
   int page = 1;
   String search = "plant";
-  var controller;
+  FloatingSearchBarController searchController;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   List<String> history = List<String>.filled(3, null, growable: false);
@@ -53,16 +54,26 @@ class _GalleryScreenState extends State<GalleryScreen> {
       if (response.statusCode == 200) {
         final List t =
             response.data["hits"]; //dio does json decode automatically
+        bool noMoreElements = t.length < 40;
+
+        if (noMoreElements) {
+          setState(() {
+            _isLastPage = true;
+          });
+        }
+
         setState(
           () {
-            page++;
+            page += noMoreElements ? 0 : 1;
             posts.addAll(t.map((item) => Post.fromJson(item)).toList());
             _isLoading = false;
           },
         );
 
         Fluttertoast.showToast(
-            msg: "Loaded page $page, size is ${posts.length}",
+            msg: posts.length % 40 == 0
+                ? ("Loaded page $page, size is ${posts.length}")
+                : "Reached the last page.",
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIosWeb: 4,
@@ -91,7 +102,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     if (_scrollController.offset >=
             _scrollController.position.maxScrollExtent - 250 &&
         !_scrollController.position.outOfRange) {
-      if (!_isLoading) {
+      if (!_isLoading && !_isLastPage) {
         /* print("Should load more");
         print("Offset ${_scrollController.offset}");
         print("Max extent ${_scrollController.position.maxScrollExtent}"); */
@@ -111,7 +122,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   Widget buildFloatingSearchBar() {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    controller = FloatingSearchBarController();
+    searchController = FloatingSearchBarController();
 
     getHistory().then(
       (value) => setState(
@@ -124,7 +135,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     return FloatingSearchBar(
       hint: 'Caută imagini...',
 
-      controller: controller,
+      controller: searchController,
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 600),
       transitionCurve: Curves.easeInOut,
@@ -141,7 +152,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         });
       },
       onSubmitted: (query) {
-        controller.close();
+        searchController.close();
         setState(() {
           page = 1;
           if (!history.contains(query)) {
@@ -216,8 +227,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   var w = GestureDetector(
                     onTap: () {
                       print("Tapped index $index");
-                      controller.close();
-                      controller.query = entry.value;
+                      searchController.close();
+                      searchController.query = entry.value;
                       setState(() {
                         search = entry.value;
                         page = 1;
@@ -273,7 +284,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
         onPressed: () {
           setState(() {
             search = getRandomWord();
-            controller.query = search;
+            searchController.query = search;
             page = 1;
             posts.clear();
           });
