@@ -7,6 +7,7 @@ import 'package:grow_it/screens/detailScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:grow_it/util/randomWord.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,14 +22,15 @@ class _GalleryScreenState extends State<GalleryScreen> {
   List<Post> posts = [];
   int page = 1;
   String search = "plant";
-
+  var controller;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  List<String> history = List<String>.filled(3, "");
+
+  List<String> history = List<String>.filled(3, null, growable: false);
 
   Future<List<String>> getHistory() async {
     final SharedPreferences prefs = await _prefs;
     List<String> elements =
-        prefs.getStringList('history') ?? List.from(["test"]);
+        prefs.getStringList('history') ?? List.from(["cars"]);
     return elements;
   }
 
@@ -109,7 +111,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   Widget buildFloatingSearchBar() {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    final controller = FloatingSearchBarController();
+    controller = FloatingSearchBarController();
 
     getHistory().then(
       (value) => setState(
@@ -142,7 +144,14 @@ class _GalleryScreenState extends State<GalleryScreen> {
         controller.close();
         setState(() {
           page = 1;
-          if (!history.contains(query)) history.insert(0, query);
+          if (!history.contains(query)) {
+            if (history.length > 4) {
+              history.insert(0, query);
+              history.removeLast();
+            } else {
+              history.insert(0, query);
+            }
+          }
           posts.clear();
         });
         setHistory();
@@ -259,10 +268,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
       backgroundColor: Colors.black,
       floatingActionButton: FloatingActionButton(
         // isExtended: true,
-        child: Icon(Icons.add),
+        child: Icon(Icons.repeat),
         backgroundColor: Colors.green,
         onPressed: () {
-          setHistory();
+          setState(() {
+            search = getRandomWord();
+            controller.query = search;
+            page = 1;
+            posts.clear();
+          });
+          fetchData();
         },
       ),
       body: Stack(
@@ -281,20 +296,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
                               ? 3
                               : 2)
                       : 2,
-                  crossAxisSpacing: (kIsWeb
-                      ? (width > 1000
-                          ? 150
-                          : width > 600
-                              ? 100
-                              : 10)
-                      : 5.0),
-                  mainAxisSpacing: (kIsWeb
-                      ? (width > 1000
-                          ? 150
-                          : width > 600
-                              ? 100
-                              : 10)
-                      : 5.0),
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 5,
                 ),
                 itemBuilder: (BuildContext context, int index) {
                   return Tile(
