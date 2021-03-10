@@ -70,16 +70,16 @@ class _GalleryScreenState extends State<GalleryScreen> {
           },
         );
 
-        Fluttertoast.showToast(
-            msg: posts.length % 40 == 0
-                ? ("Loaded page $page, size is ${posts.length}")
-                : "Reached the last page.",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 4,
-            backgroundColor: Colors.orange,
-            textColor: Colors.white,
-            fontSize: 16.0);
+        if (posts.length % 40 != 0) {
+          Fluttertoast.showToast(
+              msg: "Reached the last page.",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 4,
+              backgroundColor: Colors.orange,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       }
     } catch (e) {
       print(e);
