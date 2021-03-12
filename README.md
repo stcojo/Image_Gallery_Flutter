@@ -16,7 +16,8 @@ Progressive Web App (PWA) built with Dart and the Flutter framework. The same co
 The app is a gallery / wallpaper finder app, which fetches data from a remote endpoint and displays images using a grid view and a page view. Hero (shared element) transitions are used to achieve a seamless experience.
 
 <p><h4>Running natively by using the Flutter apps</h4>
-   The app is compiled to platform specific apps (iOS or Android) and runs normally by installing the app.
+
+The app is compiled to platform specific apps (iOS or Android) and runs normally by installing the app.
  
 <img src="output2.gif" />                 
 <h4>Running in the mobile browser</h4>
@@ -36,7 +37,9 @@ Certain elements will only be displayed on the Web app, such as the arrows to na
 
 Try the web app for yourself: https://gardenapp-c9105.web.app/
 
-![2021-03-12 (1)](https://user-images.githubusercontent.com/17060399/110940380-7ab82980-833f-11eb-93b6-abad3f604f38.png)
+![2021-03-12 (2)](https://user-images.githubusercontent.com/17060399/110955636-79442c80-8352-11eb-8eb5-d06124b528b9.png)
+![new](https://user-images.githubusercontent.com/17060399/110955647-7c3f1d00-8352-11eb-87e1-53c3c77675e6.png)
+
 
 
 ### Built With
@@ -55,9 +58,6 @@ Try the web app for yourself: https://gardenapp-c9105.web.app/
 * Drag down to pop transitions: https://pub.dev/packages/drag_down_to_pop
 * Flutter Toast: https://pub.dev/packages/fluttertoast
 
-## What can be improved?
-* Adding global state management (Provider approach or Redux)
-
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -69,22 +69,19 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
-
 <!-- CONTACT -->
 ## Contact
+
+Feel free to email if you have any questions about the concepts used or any questions about the app in general.
 
 Stefan Cojocaru - stefan.cojocaru@microsoft.com
 
 Project Link: [Flutter Gallery PWA](https://github.com/stcojo/Image_Gallery_Flutter)
-
 
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
