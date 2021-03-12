@@ -25,7 +25,7 @@ The app is compiled to platform specific apps (iOS or Android) and runs normally
 
 <a href="https://flutter.dev/docs/development/tools/sdk/release-notes/release-notes-2.0.0">Flutter 2.0</a> introduced stable web support and compiling for web is very easy, assuming all used plugins are web compatible. 
 The web version of the app is hosted on Firebase and works on desktop and mobile browsers. 
-It can be used a regular Web App or it can installed as a standalone app by opening the URL and choosing to install the PWA.
+It can be used as a regular Web App or it can installed as a standalone app by opening the URL and choosing to install the PWA.
 
 Try the web app for yourself: https://gardenapp-c9105.web.app/
 
