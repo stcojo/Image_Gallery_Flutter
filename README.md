@@ -8,6 +8,7 @@
   </a>
 
   <h3 align="center">Flutter gallery (Progressive Web App)</h3>
+    <h3 align="center">for iOS/Android/Web/Desktop</h3>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
