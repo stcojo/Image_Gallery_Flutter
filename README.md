@@ -7,8 +7,7 @@
     <img src="https://user-images.githubusercontent.com/17060399/110951190-71ce5480-834d-11eb-8474-319e45179927.jpg" alt="Logo" width="30%">
   </a>
 
-  <h3 align="center">Flutter gallery (Progressive Web App)</h3>
-    <h3 align="center">for iOS/Android/Web/Desktop</h3>
+  <h3 align="center">Flutter gallery (Progressive Web App) for iOS/Android/Web/Desktop</h3>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
