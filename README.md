@@ -15,8 +15,7 @@
 Progressive Web App (PWA) built with Dart and the Flutter framework.
 The app is a gallery / wallpaper finder app, which fetches data from a remote endpoint and displays images using a grid view and a page view. Hero (shared element) transitions are used to achieve a seamless experience.
 
-<p><h4>Running natively on Android by using
- the Flutter app</h4>
+<p><h4>Running natively by using the Flutter apps</h4>
    The app is compiled to platform specific apps (iOS or Android) and runs normally by installing the app.
  
 <img src="output2.gif" />                 
@@ -26,6 +25,8 @@ The app is a gallery / wallpaper finder app, which fetches data from a remote en
 The web version of the app is hosted on Firebase and works on desktop and mobile browsers. 
 It can be used a regular Web App or it can installed as a standalone app by opening the URL and choosing to install the PWA.
 
+Try the web app for yourself: https://gardenapp-c9105.web.app/
+
 <img src="output.gif" />
 
 <h4>Running on a desktop browser</h4>
@@ -33,9 +34,9 @@ It can be used a regular Web App or it can installed as a standalone app by open
 The web app is responsive and the code decides how to scale the columns based on the available screen space. 
 Certain elements will only be displayed on the Web app, such as the arrows to navigate left/right.
 
+Try the web app for yourself: https://gardenapp-c9105.web.app/
+
 ![2021-03-12 (1)](https://user-images.githubusercontent.com/17060399/110940380-7ab82980-833f-11eb-93b6-abad3f604f38.png)
-
-
 
 
 ### Built With
@@ -44,17 +45,15 @@ Certain elements will only be displayed on the Web app, such as the arrows to na
 * [Dart language](https://dart.dev/)
 
 
-
 <!-- GETTING STARTED -->
 ## Concepts used
 
+* Dio network client: https://pub.dev/packages/dio
 * Flutter Navigation: https://flutter.dev/docs/development/ui/navigation
-* Firebase for authentication: https://firebase.google.com/docs/auth
-* Location package: https://pub.dev/packages/location
-* Intl package: https://pub.dev/packages/intl
-* Google Places API for fetching location information: https://developers.google.com/places/web-service/overview
-* Google Reverse Geocoding API for transforming user position into a "Place": https://developers.google.com/maps/documentation/javascript/examples/geocoding-reverse
-* DarkSky weather API for fetching weather data: https://darksky.net/dev
+* Shared preferences: https://pub.dev/packages/shared_preferences
+* Photo view library: https://pub.dev/packages/photo_view
+* Drag down to pop transitions: https://pub.dev/packages/drag_down_to_pop
+* Flutter Toast: https://pub.dev/packages/fluttertoast
 
 ## What can be improved?
 * Adding global state management (Provider approach or Redux)
