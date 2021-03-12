@@ -12,7 +12,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Progressive Web App (PWA) built with Dart and the Flutter framework.
+Progressive Web App (PWA) built with Dart and the Flutter framework. The same codebase is used for running on Android, iOS, Web and even desktop apps.
 The app is a gallery / wallpaper finder app, which fetches data from a remote endpoint and displays images using a grid view and a page view. Hero (shared element) transitions are used to achieve a seamless experience.
 
 <p><h4>Running natively by using the Flutter apps</h4>
