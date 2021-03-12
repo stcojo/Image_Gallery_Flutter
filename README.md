@@ -36,6 +36,8 @@ Try the web app for yourself: https://gardenapp-c9105.web.app/
 The web app is responsive and the code decides how to scale the columns based on the available screen space. 
 Certain elements will only be displayed on the Web app, such as the arrows to navigate left/right.
 
+Additionally, the web version can be navigated using the arrow keys and the ESC key for going back.
+
 Try the web app for yourself: https://gardenapp-c9105.web.app/
 
 ![2021-03-12 (2)](https://user-images.githubusercontent.com/17060399/110955636-79442c80-8352-11eb-8eb5-d06124b528b9.png)
