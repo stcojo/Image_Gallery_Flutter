@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:drag_down_to_pop/drag_down_to_pop.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:grow_it/components/tile.dart';
+import 'package:grow_it/components/Tile.dart';
 import 'package:grow_it/model/post.dart';
 import 'package:grow_it/screens/detailScreen.dart';
 import 'package:flutter/material.dart';
@@ -115,7 +115,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   _openDetail(context, index) {
     final route = ImageViewerPageRoute(
-      builder: (context) => DetailScreen(posts: posts, index: index),
+      builder: (context) => DetailScreen(
+        posts: posts,
+        pageController: new PageController(initialPage: index),
+      ),
     );
     Navigator.push(context, route);
   }

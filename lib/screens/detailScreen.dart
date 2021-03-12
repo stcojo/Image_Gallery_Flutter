@@ -10,9 +10,10 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class DetailScreen extends StatefulWidget {
   final List<Post> posts;
-  final int index;
 
-  const DetailScreen({this.posts, this.index});
+  final PageController pageController;
+
+  const DetailScreen({this.posts, this.pageController});
 
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -22,7 +23,7 @@ class _DetailScreenState extends State<DetailScreen> {
   bool _visible = true;
   @override
   Widget build(BuildContext context) {
-    PageController _pageController = PageController(initialPage: widget.index);
+    //pageController = PageController(initialPage: widget.index);
 
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
@@ -34,7 +35,7 @@ class _DetailScreenState extends State<DetailScreen> {
         actions: <Type, Action<Intent>>{
           MoveLeftIntent: CallbackAction<MoveLeftIntent>(
             onInvoke: (MoveLeftIntent intent) => {
-              _pageController.previousPage(
+              widget.pageController.previousPage(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
               )
@@ -42,7 +43,7 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
           MoveRightIntent: CallbackAction<MoveRightIntent>(
             onInvoke: (MoveRightIntent intent) => {
-              _pageController.nextPage(
+              widget.pageController.nextPage(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.easeInOut,
               )
@@ -78,14 +79,18 @@ class _DetailScreenState extends State<DetailScreen> {
                     },
                     itemCount: widget.posts.length,
                     backgroundDecoration: null,
-                    pageController: _pageController,
+                    pageController: widget.pageController,
                     onPageChanged: null, //
                   ),
                 ),
               ),
               ButtonClose(visible: _visible),
-              if (kIsWeb) ButtonLeft(pageController: _pageController),
-              if (kIsWeb) ButtonRight(pageController: _pageController),
+              if (kIsWeb)
+                ButtonLeft(
+                    pageController: widget.pageController, visible: _visible),
+              if (kIsWeb)
+                ButtonRight(
+                    pageController: widget.pageController, visible: _visible),
             ],
           ),
         ),
