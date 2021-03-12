@@ -20,12 +20,12 @@ class ButtonClose extends StatelessWidget {
       child: Align(
         alignment: Alignment.topRight,
         child: Padding(
-          padding: EdgeInsets.all(32),
+          padding: EdgeInsets.only(top: 32, right: 16),
           child: ClipOval(
             child: Material(
-              color: Color.fromRGBO(255, 172, 0, 0.6), // button color
+              color: Color.fromRGBO(255, 255, 240, 0.5), // button color
               child: InkWell(
-                splashColor: Colors.orange[100], // inkwell color
+                splashColor: Colors.grey[200], // inkwell color
                 child: SizedBox(
                   width: 36,
                   height: 36,
